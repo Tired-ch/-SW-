@@ -16,6 +16,12 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        # ### <-- 뽀모도로 변수 추가
+        self.pomodoro_time_left = 25 * 60
+        self.pomodoro_running = False
+        self.pomodoro_timer_id = None
+        # ###
+
         # configure window
         self.title("PlanBlock - My Planner")  # ### <-- 타이틀 변경
         self.geometry(f"{self.width}x{self.height}")
@@ -62,6 +68,24 @@ class App(customtkinter.CTk):
         self.task_undone = customtkinter.CTkButton(
             self.task_frame, text='Mark UnDone', command=self.markUnDone)
         self.task_undone.grid(row=3, column=0, padx=20, pady=10)
+
+        # ### <-- 2. 뽀모도로 UI 위젯 추가
+        self.pomodoro_label = customtkinter.CTkLabel(self.task_frame, text="25:00",
+                                                    font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.pomodoro_label.grid(row=4, column=0, padx=20, pady=(15,5))
+
+        # 뽀모도로 시작/중지 버튼을 담을 작은 프레임
+        self.pomo_button_frame = customtkinter.CTkFrame(self.task_frame, fg_color="transparent")
+        self.pomo_button_frame.grid(row=5, column=0, padx=20, pady=(0, 10))
+
+        self.pomodoro_start_button = customtkinter.CTkButton(self.pomo_button_frame, text="Start", 
+                                                          command=self.start_pomodoro)
+        self.pomodoro_start_button.grid(row=0, column=0, padx=5)
+        
+        self.pomodoro_stop_button = customtkinter.CTkButton(self.pomo_button_frame, text="Stop", 
+                                                         command=self.stop_pomodoro)
+        self.pomodoro_stop_button.grid(row=0, column=1, padx=5)
+        # ###
 
         # create sidebar3 frame (새 작업 추가)
         self.task_new = customtkinter.CTkFrame(self)
@@ -255,6 +279,55 @@ class App(customtkinter.CTk):
         else:
             self.log_lable.configure(text='Select Any Task')
 
+
+    # ### <-- 3. 뽀모도로 로직 함수 추가
+
+    def start_pomodoro(self):
+        if self.pomodoro_running:
+            return
+        
+        self.pomodoro_running = True
+        self.pomodoro_start_button.configure(state="disabled") # 시작 버튼 비활성화
+        self.pomodoro_stop_button.configure(state="normal")
+        self.countdown() # 카운트다운 시작
+
+    def stop_pomodoro(self):
+        """뽀모도로 타이머를 중지하고 초기화합니다."""
+        if not self.pomodoro_running:
+            return # 실행 중이 아니면 아무것도 안 함
+        
+        self.pomodoro_running = False
+        if self.pomodoro_timer_id:
+            self.after_cancel(self.pomodoro_timer_id) # 예약된 self.after()를 취소
+            self.pomodoro_timer_id = None
+        
+        self.pomodoro_time_left = 25 * 60 # 25분으로 초기화
+        self.pomodoro_label.configure(text="25:00")
+        self.pomodoro_start_button.configure(state="normal") # 시작 버튼 활성화
+        self.pomodoro_stop_button.configure(state="disabled")
+
+    def countdown(self):
+        """1초마다 호출되어 시간을 줄이고 라벨을 업데이트합니다."""
+        if not self.pomodoro_running:
+            return # 중지 상태면 카운트다운 중단
+
+        if self.pomodoro_time_left > 0:
+            # 남은 시간을 분:초 형식으로 변환
+            minutes, seconds = divmod(self.pomodoro_time_left, 60)
+            time_str = f"{minutes:02d}:{seconds:02d}"
+            self.pomodoro_label.configure(text=time_str)
+            
+            self.pomodoro_time_left -= 1 # 1초 감소
+            
+            # 1초(1000ms) 뒤에 이 함수를 다시 실행하도록 예약
+            self.pomodoro_timer_id = self.after(1000, self.countdown) 
+        
+        else:
+            # 타이머 종료
+            self.pomodoro_label.configure(text="Break!")
+            self.stop_pomodoro()
+            # (선택) 여기에 소리 알림 코드를 추가할 수 있습니다.
+    # ###
 
 if __name__ == "__main__":
     app = App()
