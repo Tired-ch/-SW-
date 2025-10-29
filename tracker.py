@@ -22,9 +22,9 @@ class App(customtkinter.CTk):
         self.resizable(False, False)
 
         # configure grid layout (4x4)
-        self.grid_column_configure(1, weight=1)
-        self.grid_column_configure((2, 3), weight=0)
-        self.grid_row_configure((0, 1, 2), weight=1)
+        self.columnconfigure(1, weight=1)
+        self.columnconfigure((2, 3), weight=0)
+        self.rowconfigure((0, 1, 2), weight=1)
 
         # ### <-- (UI 변경 1) 사이드바 프레임 재구성 (캘린더 넣을 공간 확보)
 
