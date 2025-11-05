@@ -10,8 +10,8 @@ rootDir = os.path.dirname(os.path.abspath(__file__))
 
 
 class App(customtkinter.CTk):
-    width = 900
-    height = 600
+    width = 1100
+    height = 800
 
     def __init__(self):
         super().__init__()
@@ -28,8 +28,8 @@ class App(customtkinter.CTk):
         self.resizable(False, False)
 
         # configure grid layout (4x4)
-        self.columnconfigure(1, weight=1)
-        self.columnconfigure((2, 3), weight=0)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=2)
         self.rowconfigure((0, 1, 2), weight=1)
 
         # ### <-- (UI 변경 1) 사이드바 프레임 재구성 (캘린더 넣을 공간 확보)
@@ -45,34 +45,37 @@ class App(customtkinter.CTk):
         # ### <-- (로직 변경 2) 버튼 커맨드를 새 함수로 변경
         self.filter_to_do = customtkinter.CTkButton(
             self.filter_frame, text='To Do', command=lambda: self.filter_tasks('TODO'))
-        self.filter_to_do.grid(row=1, column=0, padx=20, pady=10, sticky="n")
+        self.filter_to_do.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
         
         self.filter_done = customtkinter.CTkButton(
             self.filter_frame, text='Done', command=lambda: self.filter_tasks('DONE'))
-        self.filter_done.grid(row=2, column=0, padx=20, pady=10, sticky="n")
+        self.filter_done.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
         
         self.filter_all = customtkinter.CTkButton(
             self.filter_frame, text='All', command=lambda: self.filter_tasks('ALL'))
-        self.filter_all.grid(row=3, column=0, padx=20, pady=10, sticky="n")
+        self.filter_all.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
         # create sidebar2 frame (작업 버튼)
         self.task_frame = customtkinter.CTkFrame(self)
         self.task_frame.grid(row=1, column=0, padx=(
             20, 20), pady=(0, 20), sticky="nsew") # ### <-- pady 변경
+        
+        self.task_frame.columnconfigure(0, weight=1)
+
         self.task_delete = customtkinter.CTkButton(
             self.task_frame, text='Delete Task', command=self.delTask)
-        self.task_delete.grid(row=1, column=0, padx=20, pady=10)
+        self.task_delete.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
         self.task_done = customtkinter.CTkButton(
             self.task_frame, text='Mark Done', command=self.markDone)
-        self.task_done.grid(row=2, column=0, padx=20, pady=10)
+        self.task_done.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
         self.task_undone = customtkinter.CTkButton(
             self.task_frame, text='Mark UnDone', command=self.markUnDone)
-        self.task_undone.grid(row=3, column=0, padx=20, pady=10)
+        self.task_undone.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
 
         # ### <-- 2. 뽀모도로 UI 위젯 추가
         self.pomodoro_label = customtkinter.CTkLabel(self.task_frame, text="25:00",
                                                     font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.pomodoro_label.grid(row=4, column=0, padx=20, pady=(15,5))
+        self.pomodoro_label.grid(row=4, column=0, padx=20, pady=(15,5), sticky="ew")
 
         # 뽀모도로 시작/중지 버튼을 담을 작은 프레임
         self.pomo_button_frame = customtkinter.CTkFrame(self.task_frame, fg_color="transparent")
@@ -94,13 +97,17 @@ class App(customtkinter.CTk):
         self.task_new = customtkinter.CTkFrame(self)
         self.task_new.grid(row=2, column=0, padx=(
             20, 20), pady=(0, 20), sticky="nsew") # ### <-- pady 변경
+
+        self.task_new.columnconfigure(0, weight=1)
+        self.task_new.rowconfigure(0, weight=1)
+ 
         self.task_name_entry = customtkinter.CTkTextbox(
-            self.task_new, height=100, width=150)
-        self.task_name_entry.grid(row=0, column=0, padx=10, pady=10)
+            self.task_new, height=100)
+        self.task_name_entry.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
         self.task_name_entry.insert("1.0", text="[Tag] Task Name")
         self.task_create = customtkinter.CTkButton(
             self.task_new, text="Add New Task", fg_color="transparent", border_width=2, text_color=("gray10", "#DCE4EE"), command=self.addTask)
-        self.task_create.grid(row=1, column=0, padx=20, pady=10)
+        self.task_create.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
 
         
         # ### <-- (UI 변경 2) 캘린더 프레임 생성
