@@ -76,15 +76,18 @@ class App(customtkinter.CTk):
 
         # 뽀모도로 시작/중지 버튼을 담을 작은 프레임
         self.pomo_button_frame = customtkinter.CTkFrame(self.task_frame, fg_color="transparent")
-        self.pomo_button_frame.grid(row=5, column=0, padx=20, pady=(0, 10))
+        self.pomo_button_frame.grid(row=5, column=0, padx=20, pady=(0, 10), sticky = "ew")
+
+        self.pomo_button_frame.columnconfigure(0, weight=1)
+        self.pomo_button_frame.columnconfigure(1, weight=1)
 
         self.pomodoro_start_button = customtkinter.CTkButton(self.pomo_button_frame, text="Start", 
                                                           command=self.start_pomodoro)
-        self.pomodoro_start_button.grid(row=0, column=0, padx=5)
+        self.pomodoro_start_button.grid(row=0, column=0, padx=5, sticky="ew")
         
         self.pomodoro_stop_button = customtkinter.CTkButton(self.pomo_button_frame, text="Stop", 
                                                          command=self.stop_pomodoro)
-        self.pomodoro_stop_button.grid(row=0, column=1, padx=5)
+        self.pomodoro_stop_button.grid(row=0, column=1, padx=5, sticky="ew")
         # ###
 
         # create sidebar3 frame (새 작업 추가)
@@ -127,14 +130,18 @@ class App(customtkinter.CTk):
         self.task_view_frame.grid(row=1, column=1, rowspan=2, padx=(
             20, 20), pady=(0, 20), sticky="nsew") # ### <-- row, rowspan, pady 변경
         
-        self.task_view_area = Listbox(self.task_view_frame, width=79, height=15, # ### <-- height 조절
+        self.task_view_frame.columnconfigure(0, weight=1)
+        self.task_view_frame.rowconfigure(0, weight=1)
+
+        self.task_view_area = Listbox(self.task_view_frame, height=15, # ### <-- height 조절
                                       selectmode=MULTIPLE, background='#474747', font=('Times', 15))
         self.task_view_area.grid(
-            row=0, column=1, rowspan=3, pady=(10, 10), padx=(10, 10), sticky="nsew") # ### <-- padding 추가
+            row=0, column=0, rowspan=1, pady=(10, 10), padx=(10, 10), sticky="nsew") # ### <-- padding 추가
 
         self.log_lable = customtkinter.CTkLabel(
             self.task_view_frame, text="Logger", font=customtkinter.CTkFont(size=15))
-        self.log_lable.grid(row=3, column=1, padx=20, pady=(0, 5))
+
+        self.log_lable.grid(row=1, column=0, padx=20, pady=(0, 5))
 
         self.loadTask() # ### <-- (로직 변경 4) 시작 시 loadTask() 호출 (인자 없이)
 
