@@ -1,61 +1,80 @@
-Task Tracker is a python CustomTkinter UI-library based application that allows you to monitor your tasks and store them in sqlite3 database tables as To-Do, Done
+PlanBlock 사용 가이드
 
 ---
 
-# Libraries:
-1.  customtkinter
-2.  tkinter
-3.  sqlite3
-4.  os
+# 메인 화면
+## 전체 화면
+![image](https://github.com/user-attachments/assets/a248e000-07b2-4af9-b494-48d026b7d60c)
 
 ---
 
-# Setup
-Install the module with pip:
-```
-pip3 install -r libs.txt
-```
+## 캘린더 및 검색 기능, 업무 리스트
+캘린더의 원하는 날짜를 클릭하면 해당 날짜에 기록된 업무 리스트를 보여줌
+검색창에 원하는 키워드를 입력 시, 해당 업무 및 기록된 날짜를 보여줌
+
+![image](https://github.com/user-attachments/assets/37670e66-39b9-4d00-919b-0a2c7d1bde79)
 
 ---
 
-# Screenshots
-## Launch Window
-Opens in the To-Do mode, which displays a list of all the tasks that have been marked as finished or new.
-![image](https://user-images.githubusercontent.com/59251885/209942835-1404f6d8-6e7f-4dfc-9064-a2a8f6443065.png)
+## 일정 입력, 마감기한 및 루틴여부 설정
+입력 박스에 추가할 업무를 입력
+DeadLine을 설정 가능
+루틴여부 체크 시, 캘린더에 설정한 날 이후 다음주 4주간 루틴으로 저장
+
+ex - 12월 4일을 선택 후, 루틴을 입력 -> 12월 11일, 18일, 25일, 1월 1일 업무 목록에 루틴이 추가됨
+
+![image](https://github.com/user-attachments/assets/f078df1a-bb30-4ff1-b61a-36274ce2e041)
+
 
 ---
 
-## Modes
+## 리스트박스 설정 버튼
+리스트 박스에 표시될 내용들을 설정
+
+![image](https://github.com/user-attachments/assets/ccc27525-b115-4275-9dfa-89b6cedbc41c)
 ### Done Mode
-A list of all tasks that have been done.
-![image](https://user-images.githubusercontent.com/59251885/209943494-ecb43515-0e56-4175-b88f-2330ebba1f6e.png)
+이미 처리된 업무목록들을 보여줌
 ### To Do Mode
-A list of all tasks that have to be done.
-![image](https://user-images.githubusercontent.com/59251885/209944258-86a201de-3151-4c7f-916f-fedf40e178cf.png)
+해야 할 업무 목록을 보여줌
 ### All Mode
-A list of all tasks with green highlights for accomplished tasks
-![image](https://user-images.githubusercontent.com/59251885/209944318-b04e8ca5-486b-48d1-9bf8-bc6a50e0ab2c.png)
+해야 할 업무 및 이미 처리된 업무 목록을 보여줌
 
 ---
 
-## Features
+## 업무 처리여부 및 삭제 버튼
+저장된 업무 목록들의 처리 여부 및 저장된 업무 목록 삭제 버튼
+
+![image](https://github.com/user-attachments/assets/d2c94bcb-2153-4908-847c-038961fe29f5)
+
 ### Delete Task
-![image](https://user-images.githubusercontent.com/59251885/209943978-009e4faf-c468-4a24-a0d2-be2732b801cc.png)
-Enables you to select one or more tasks and delete them.
-### Mark as Done
-![image](https://user-images.githubusercontent.com/59251885/209944080-389dac92-a64d-4e3e-9deb-153019ccf494.png)
-Enables you to select one or more tasks and mark them as Done.
-### Mark as UnDone
-![image](https://user-images.githubusercontent.com/59251885/209944025-0b28a877-bf6d-4cd6-b29f-e118dea9ca0b.png)
-Enables you to select one or more tasks and mark them as not done.
-### Add New Task
-![image](https://user-images.githubusercontent.com/59251885/209944693-e36b14a9-1020-459d-851c-e63012a00606.png)
-Enables you to add new task with To-Do state by default.
+저장된 업무 삭제
+### Mark Done
+업무 처리 표시
+### Mark UnDone
+업무 미처리 표시
 
 ---
 
-Refrence:
-  https://github.com/TomSchimansky/CustomTkinter
+## 타이머
+분단위로 시간을 설정하여 타이머를 설정 가능, 시간이 만료되면 1초간 비프음을 울림
+![image](https://github.com/user-attachments/assets/53db3833-a727-4922-9a23-d2bbf61fadfe)
+
+---
+
+## 음악 재생 및 정지
+저장된 음악을 선택 및 재생, 정지
+
+![image](https://github.com/user-attachments/assets/b049c976-91d6-4567-832b-fb00d070c787)
+
+### 음악 추가 및 삭제 
+제목을 입력 및 유튜브 URL을 입력하여 저장
+
+![image](https://github.com/user-attachments/assets/c3ff192e-9aa3-42b2-bff5-cde127aee344)
+
+리스트에 있는 목록을 선택하여 삭제
+
+![image](https://github.com/user-attachments/assets/e68dbc2f-b454-4fa8-91f3-cccc3136f29e)
+
 
 
 
