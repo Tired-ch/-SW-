@@ -329,22 +329,24 @@ class App(customtkinter.CTk):
         status_msg = f"Found {len(rows)} tasks" if self.search_keyword else f"{date} Loaded ({len(rows)})"
         self.log_label.configure(text=status_msg)
 
+    # 사용자가 Add New Task 버튼 눌렀을 때 호출되는 메소드
     def addTask(self):
+        # task 입력창 내용, 선택한 날짜, 데드라인 정보 저장
         name = self.task_name_entry.get("1.0", END).strip()
         date = self.calendar.get_date()
         deadline = self.deadline_var.get()
-
+        # 공백 or 기본 문자열 방지
         if not name or name == '[Tag] Task Name': return
 
         database.execute_query("INSERT INTO TRACKER (TASK,STATE,TASK_DATE,DEADLINE) VALUES (?,0,?,?)", 
                                (name, date, deadline))
         
+        # 루틴 여부를 확인하여 4주 일정 추가
         if self.routine_var.get() == 1:
             base = datetime.strptime(date, '%Y-%m-%d')
             for i in range(1, 5):
                 next_date = (base + timedelta(weeks=i)).strftime('%Y-%m-%d')
-                # 루틴은 마감일도 같이 밀려야 하는지? 보통 루틴은 마감일이 그날이므로
-                # 여기서는 Deadline도 똑같이 주 단위로 밀리도록 설정 (만약 데드라인이 설정되어 있다면)
+               
                 next_deadline = ""
                 if deadline:
                     base_dl = datetime.strptime(deadline, '%Y-%m-%d')
@@ -353,6 +355,7 @@ class App(customtkinter.CTk):
                 database.execute_query("INSERT INTO TRACKER (TASK,STATE,TASK_DATE,DEADLINE) VALUES (?,0,?,?)", 
                                        (f"[Routine] {name}", next_date, next_deadline))
         
+        # 텍스트 입력창 등 기본 설정으로 초기화
         self.task_name_entry.delete("1.0", END)
         self.deadline_var.set("") 
         self.routine_var.set(0)
@@ -365,7 +368,7 @@ class App(customtkinter.CTk):
         if not self.task_view_area.curselection(): return
         idx = self.task_view_area.curselection()[0]
         
-        # [중요] 업데이트/삭제 시에도 loadTask와 똑같은 조건으로 ID를 찾아야 함
+        
         date = self.calendar.get_date()
         query = "SELECT TASK_ID FROM TRACKER WHERE " 
         params = []
@@ -395,7 +398,7 @@ class App(customtkinter.CTk):
         if not self.task_view_area.curselection(): return
         idx = self.task_view_area.curselection()[0]
         
-        # [중요] 삭제 시에도 loadTask와 똑같은 조건으로 ID를 찾아야 함
+        
         date = self.calendar.get_date()
         query = "SELECT TASK_ID FROM TRACKER WHERE " 
         params = []

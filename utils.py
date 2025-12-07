@@ -17,17 +17,18 @@ class MusicPlayer:
         threading.Thread(target=self._stream_audio, args=(url, status_callback), daemon=True).start()
 
     def _stream_audio(self, url, status_callback):
-        # ### [핵심 수정] 다운로드 전 기존 파일 잠금 해제 ###
+        # 다운로드 전 기존 파일 잠금 해제
         try:
             pygame.mixer.music.stop() # 1. 재생 중지
-            pygame.mixer.music.unload() # 2. 파일 놓아주기 (중요!)
+            pygame.mixer.music.unload() # 2. 파일 unload
         except Exception:
             pass # 재생 중인 게 없으면 패스
             
         # 혹시 파일이 바로 안 풀릴 수 있으니 0.1초 대기
         time.sleep(0.1) 
         
-        # 파일이 여전히 잠겨있는지 확인하고 삭제 시도 (청소)
+        # 파일이 이미 있다면 삭제 - 새 노래를 받기 위함
+        # 파일을 여전히 사용 중이라면 에러 메시지 띄우고 중단
         temp_path = os.path.join(rootDir, 'temp_audio.mp3')
         if os.path.exists(temp_path):
             try:
@@ -38,6 +39,7 @@ class MusicPlayer:
 
         status_callback("Loading audio...")
         
+        # yt-dlp 다운로드 옵션 설정
         ydl_opts = {
             'format': 'bestaudio/best',
             'noplaylist': True,
@@ -49,6 +51,7 @@ class MusicPlayer:
                 'preferredcodec': 'mp3',
                 'preferredquality': '192',
             }],
+            # 유튜브 차단 우회 설정
             'extractor_args': {
                 'youtube': {
                     'player_client': ['android', 'web'],
@@ -58,12 +61,12 @@ class MusicPlayer:
         }
         
         try:
+            # 설정대로 다운로드
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=True)
-                # 파일명이 고정값이 아니라 ID가 붙을 수도 있으므로 실제 생성된 파일명 찾기
-                # 하지만 outtmpl을 고정했으므로 temp_audio.mp3가 생성됨
                 filename = os.path.join(rootDir, 'temp_audio.mp3')
                 
+                # pygame 플레이어에 load 후 재생
                 pygame.mixer.music.load(filename)
                 pygame.mixer.music.play()
                 status_callback(f"Playing: {info.get('title', 'Audio')}")
@@ -81,9 +84,10 @@ class MusicPlayer:
 class TimerLogic:
     def __init__(self):
         pass
-    
+    # Second(초) 데이터를 받고 (분, 초)로 분리
     def get_minutes_seconds(self, total_seconds):
         return divmod(total_seconds, 60)
 
+    # Beep 음을 1초동안 재생
     def play_beep(self):
         winsound.Beep(1000, 1000)
